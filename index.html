@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gero Alexander Bodemann - Kopierschutz & Reverse Engineering</title>
+  <meta name="description"
+    content="Gero Alexander Bodemann - Freiberuflicher Software-Entwickler & Security Analyst für Binäranalysen, Lizenzsysteme und Manipulationsschutz für native Windows- und Desktop-Anwendungen.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Menlo', 'monospace'],
+          },
+          colors: {
+            app: {
+              bg: '#0d0e11',
+              card: '#121418',
+              cardHover: '#171920',
+              border: '#23262d',
+              borderSubtle: '#1b1d24',
+              text: '#f3f4f6',
+              muted: '#9ca3af',
+              dim: '#6b7280',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    ::selection {
+      background-color: #2b303c;
+      color: #ffffff;
+    }
+
+    html {
+      background-color: #0d0e11;
+      color-scheme: dark;
+    }
+
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    @keyframes marquee {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .animate-marquee {
+      display: flex;
+      width: max-content;
+      animation: marquee 24s linear infinite;
+    }
+
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes bg-stream {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .animate-bg-stream {
+      display: flex;
+      width: max-content;
+      animation: bg-stream 40s linear infinite;
+    }
+
+    .mask-fade-edges {
+      mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+    }
+  </style>
+</head>
+
+<body
+  class="bg-app-bg text-app-text font-sans selection:bg-neutral-800 selection:text-white min-h-screen flex flex-col justify-between">
+
+  <div id="toast" role="status" aria-live="polite"
+    class="fixed bottom-6 right-6 z-50 transform translate-y-16 opacity-0 transition-all duration-150 pointer-events-none bg-app-card text-app-text text-xs font-mono px-4 py-3 rounded-md border border-app-border shadow-xl flex items-center space-x-2">
+    <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+    <span>Adresse gerbod.pentesting@gmail.com in die Zwischenablage kopiert</span>
+  </div>
+
+  <header class="border-b border-app-border bg-app-bg/95 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+
+      <a href="#"
+        class="flex items-center space-x-2 font-mono text-sm tracking-tight text-app-text hover:text-white transition-colors">
+        <span class="font-semibold text-white">Gero Alexander Bodemann</span>
+        <span class="text-app-dim hidden sm:inline">/</span>
+        <span class="text-app-muted hidden sm:inline text-xs">kopierschutz & reverse engineering</span>
+      </a>
+
+      <div class="flex items-center space-x-3">
+        <button onclick="copyMail()"
+          class="hidden sm:inline-flex items-center space-x-1.5 text-xs font-mono text-app-muted hover:text-app-text px-2.5 py-1.5 rounded border border-transparent hover:border-app-border transition-colors">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          <span>gerbod.pentesting@gmail.com</span>
+        </button>
+
+        <a href="mailto:gerbod.pentesting@gmail.com"
+          class="text-xs font-mono px-3 py-1.5 rounded border border-app-border bg-app-card hover:bg-app-cardHover text-white transition-colors">
+          Kontakt
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow">
+    <section class="py-16 sm:py-24 border-b border-app-border relative overflow-hidden">
+
+      <div
+        class="absolute inset-0 pointer-events-none select-none overflow-hidden opacity-[0.035] flex flex-col justify-around py-4"
+        aria-hidden="true">
+        <div
+          class="animate-bg-stream flex whitespace-nowrap font-mono text-5xl sm:text-7xl font-extrabold tracking-widest text-white">
+          <span class="mr-12">REDSHIFT // PENTESTED &bull; ZBRUSH // PENTESTED &bull; CINEMA 4D // PENTESTED &bull;
+            TREESIZE // PENTESTED &bull; REVERSE ENGINEERING &bull;</span>
+          <span class="mr-12">REDSHIFT // PENTESTED &bull; ZBRUSH // PENTESTED &bull; CINEMA 4D // PENTESTED &bull;
+            TREESIZE // PENTESTED &bull; REVERSE ENGINEERING &bull;</span>
+        </div>
+        <div
+          class="animate-bg-stream flex whitespace-nowrap font-mono text-4xl sm:text-6xl font-extrabold tracking-widest text-white"
+          style="animation-direction: reverse; animation-duration: 50s;">
+          <span class="mr-12">MAXON REDSHIFT &bull; MAXON ZBRUSH &bull; MAXON CINEMA 4D &bull; JAM SOFTWARE TREESIZE
+            &bull; EXPLOIT ANALYSIS &bull;</span>
+          <span class="mr-12">MAXON REDSHIFT &bull; MAXON ZBRUSH &bull; MAXON CINEMA 4D &bull; JAM SOFTWARE TREESIZE
+            &bull; EXPLOIT ANALYSIS &bull;</span>
+        </div>
+      </div>
+
+      <div class="max-w-4xl mx-auto px-6 relative z-10">
+
+        <div class="space-y-6">
+          <div class="inline-flex items-center space-x-2 text-xs font-mono text-app-dim uppercase tracking-wider">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-white font-medium">Gero Alexander Bodemann</span>
+            <span class="text-app-dim">&bull;</span>
+            <span>Freelance Security Analyst & Entwickler</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-4xl lg:text-[2.75rem] font-semibold text-white tracking-tight leading-tight">
+            Kopierschutz prüfen.<br>
+            Schutzsysteme entwickeln.
+          </h1>
+
+          <p class="text-base sm:text-lg text-app-muted max-w-2xl leading-relaxed">
+            Ich unterstütze Softwareunternehmen bei der Analyse bestehender Lizenzprüfungen auf Umgehbarkeit sowie bei
+            der Entwicklung robuster Schutzmechanismen für native Windows- und Desktop-Anwendungen. Im Gegensatz zu
+            generischen Tools wie VMProtect oder Themida wird der Kopierschutz maßgeschneidert entwickelt und tief in
+            Ihren vorhandenen Code eingepflegt.
+          </p>
+
+          <div class="pt-2 flex flex-wrap items-center gap-3">
+            <a href="mailto:gerbod.pentesting@gmail.com?subject=Anfrage%20Kopierschutz%20%2F%20Software-Sicherheit"
+              class="inline-flex items-center text-xs font-mono px-4 py-2.5 rounded bg-white text-neutral-900 font-medium hover:bg-neutral-200 transition-colors">
+              E-Mail schreiben &rarr;
+            </a>
+
+            <button onclick="copyMail()"
+              class="inline-flex items-center space-x-2 text-xs font-mono px-3.5 py-2.5 rounded border border-app-border bg-app-card hover:bg-app-cardHover text-app-text transition-colors">
+              <i data-lucide="copy" class="w-3.5 h-3.5 text-app-dim"></i>
+              <span id="heroCopyLabel">Adresse kopieren (gerbod.pentesting@gmail.com)</span>
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="mt-14 pt-8 border-t border-app-borderSubtle grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs font-mono">
+          <div>
+            <span class="text-app-dim block">Fokus</span>
+            <span class="text-app-text">C, C++, x86_64, Windows</span>
+          </div>
+          <div>
+            <span class="text-app-dim block">Integration</span>
+            <span class="text-app-text">Tief im Quellcode + maßgeschneiderte Bin2Bin Obfuskation</span>
+          </div>
+          <div>
+            <span class="text-app-dim block">Quellcode</span>
+            <span class="text-app-text">100 % Kundeneigentum</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="border-b border-app-border bg-app-card/60 backdrop-blur-sm py-4 overflow-hidden relative">
+      <div class="relative overflow-hidden mask-fade-edges">
+        <div class="animate-marquee flex items-center gap-3 py-1">
+          <div
+            class="flex items-center space-x-2.5 px-3.5 py-2 rounded border border-app-border bg-app-card shrink-0 hover:border-emerald-500/50 transition-colors">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="font-mono text-xs font-semibold text-white">Redshift</span>
+            <span class="font-mono text-[11px] text-app-dim">by Maxon &bull; Pentested</span>
+          </div>
+          <div
+            class="flex items-center space-x-2.5 px-3.5 py-2 rounded border border-app-border bg-app-card shrink-0 hover:border-emerald-500/50 transition-colors">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="font-mono text-xs font-semibold text-white">ZBrush</span>
+            <span class="font-mono text-[11px] text-app-dim">by Maxon &bull; Pentested</span>
+          </div>
+          <div
+            class="flex items-center space-x-2.5 px-3.5 py-2 rounded border border-app-border bg-app-card shrink-0 hover:border-emerald-500/50 transition-colors">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="font-mono text-xs font-semibold text-white">Cinema 4D</span>
+            <span class="font-mono text-[11px] text-app-dim">by Maxon &bull; Pentested & DRM development</span>
+          </div>
+          <div
+            class="flex items-center space-x-2.5 px-3.5 py-2 rounded border border-app-border bg-app-card shrink-0 hover:border-emerald-500/50 transition-colors">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="font-mono text-xs font-semibold text-white">TreeSize</span>
+            <span class="font-mono text-[11px] text-app-dim">by JAM Software &bull; Pentested</span>
+          </div>
+
+          <div
+            class="flex items-center space-x-2.5 px-3.5 py-2 rounded border border-app-border bg-app-card shrink-0 hover:border-emerald-500/50 transition-colors">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="font-mono text-xs font-semibold text-white">Redshift</span>
+            <span class="font-mono text-[11px] text-app-dim">by Maxon &bull; Pentested</span>
+          </div>
+          <div
+            class="flex items-center space-x-2.5 px-3.5 py-2 rounded border border-app-border bg-app-card shrink-0 hover:border-emerald-500/50 transition-colors">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="font-mono text-xs font-semibold text-white">ZBrush</span>
+            <span class="font-mono text-[11px] text-app-dim">by Maxon &bull; Pentested</span>
+          </div>
+          <div
+            class="flex items-center space-x-2.5 px-3.5 py-2 rounded border border-app-border bg-app-card shrink-0 hover:border-emerald-500/50 transition-colors">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="font-mono text-xs font-semibold text-white">Cinema 4D</span>
+            <span class="font-mono text-[11px] text-app-dim">by Maxon &bull; Pentested & DRM development</span>
+          </div>
+          <div
+            class="flex items-center space-x-2.5 px-3.5 py-2 rounded border border-app-border bg-app-card shrink-0 hover:border-emerald-500/50 transition-colors">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="font-mono text-xs font-semibold text-white">TreeSize</span>
+            <span class="font-mono text-[11px] text-app-dim">by JAM Software &bull; Pentested</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 sm:py-20 border-b border-app-border">
+      <div class="max-w-4xl mx-auto px-6">
+
+        <div class="mb-10">
+          <h2 class="text-xs font-mono uppercase tracking-wider text-app-dim">Leistungen</h2>
+          <p class="text-xl font-medium text-white mt-1">Was ich konkret für Sie übernehme:</p>
+        </div>
+
+        <div class="space-y-6">
+
+          <div class="p-6 rounded-lg border border-app-border bg-app-card">
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="text-xs font-mono text-app-dim">01 / ANALYSE & PENTESTING</span>
+            </div>
+            <h3 class="text-base font-semibold text-white mb-2">
+              Prüfung bestehender Software auf Umgehbarkeit
+            </h3>
+            <p class="text-sm text-app-muted leading-relaxed">
+              Ich untersuche Ihre Binärdateien mit denselben Werkzeugen und Ansätzen, die
+              auch Cracker nutzen.
+            </p>
+            <div class="mt-4 pt-4 border-t border-app-borderSubtle text-xs font-mono text-app-dim space-y-1">
+              <p>&bull; Lässt sich die Lizenzprüfung durch einfaches Patchen einzelner Instruktionen (z. B. JMP/NOP)
+                umgehen?</p>
+              <p>&bull; Können kryptografische Schlüssel oder Lizenzdaten während der Laufzeit aus dem Speicher
+                extrahiert werden?</p>
+              <p>&bull; Ergebnis: Ein verständlicher Bericht mit identifizierten Schwachstellen und konkreten
+                Empfehlungen.</p>
+            </div>
+          </div>
+
+          <div class="p-6 rounded-lg border border-app-border bg-app-card">
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="text-xs font-mono text-app-dim">02 / ENTWICKLUNG</span>
+            </div>
+            <h3 class="text-base font-semibold text-white mb-2">
+              Entwicklung maßgeschneiderter Lizenz- & Schutzsysteme
+            </h3>
+            <p class="text-sm text-app-muted leading-relaxed">
+              Im Gegensatz zu generischen Lösungen wie VMProtect oder Themida wird der Kopierschutz nicht ausschließlich
+              als externe Lösung implementiert, sondern maßgeschneidert und tief in Ihren vorhandenen
+              Quellcode eingepflegt.
+            </p>
+            <div class="mt-4 pt-4 border-t border-app-borderSubtle text-xs font-mono text-app-dim space-y-1">
+              <p>&bull; Maßgeschneiderte Bytecode- & VM-Architekturen für geschützte Routinen.</p>
+              <p>&bull; Mehrschichtige Erkennung von Debuggern, Hardware- und Software-Breakpoints, API-Hooking und
+                Timing-Checks.</p>
+              <p>&bull; Laufzeit-Prüfung des Codespeichers (Self-Hashing, Memory-Patch-Detection, Erkennung
+                manipulierter DLLs).</p>
+            </div>
+          </div>
+
+          <div class="p-6 rounded-lg border border-app-border bg-app-card">
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="text-xs font-mono text-app-dim">03 / CRACK-FORENSIK</span>
+            </div>
+            <h3 class="text-base font-semibold text-white mb-2">
+              Analyse nach Leaks und Cracks
+            </h3>
+            <p class="text-sm text-app-muted leading-relaxed">
+              Wenn im Internet ein Crack, Keygen oder License-Bypass für Ihre Software kursiert, untersuche ich den
+              Eingriff im Detail.
+            </p>
+            <div class="mt-4 pt-4 border-t border-app-borderSubtle text-xs font-mono text-app-dim space-y-1">
+              <p>&bull; Exakte Identifikation der manipulierten Stellen und der genutzten Vektoren.</p>
+              <p>&bull; Entwicklung gezielter Gegenmaßnahmen für Ihr nächstes Release, um Folge-Patches zu verhindern.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <section class="py-16 sm:py-20 border-b border-app-border">
+      <div class="max-w-4xl mx-auto px-6">
+
+        <div class="mb-8">
+          <h2 class="text-xs font-mono uppercase tracking-wider text-app-dim">Werkzeuge & Technologien</h2>
+          <p class="text-xl font-medium text-white mt-1">Typisches Umfeld:</p>
+        </div>
+
+        <div class="border border-app-border rounded-lg overflow-hidden bg-app-card text-xs font-mono">
+          <div class="divide-y divide-app-border">
+            <div class="p-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <span class="text-app-dim">Programmiersprachen</span>
+              <span class="sm:col-span-2 text-app-text">C, C++, x86/x64 Assembler, Python für Test-Tooling</span>
+            </div>
+            <div class="p-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <span class="text-app-dim">Plattformen & Formate</span>
+              <span class="sm:col-span-2 text-app-text">Windows (PE / PE32+, DLL)</span>
+            </div>
+            <div class="p-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <span class="text-app-dim">Analyse-Werkzeuge</span>
+              <span class="sm:col-span-2 text-app-text">IDA, x64dbg, DIE, LLVM, Trace Viewer, ImHex, CFF Explorer,
+                ...</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="py-20 sm:py-24">
+      <div class="max-w-4xl mx-auto px-6">
+
+        <div class="p-8 sm:p-10 rounded-lg border border-app-border bg-app-card space-y-6">
+
+          <div class="space-y-2">
+            <h2 class="text-xs font-mono uppercase tracking-wider text-app-dim">Kontakt</h2>
+            <h3 class="text-2xl font-semibold text-white">Projekt anfragen</h3>
+            <p class="text-sm text-app-muted max-w-xl leading-relaxed">
+              Wenn Sie Ihre Software auf Schwachstellen prüfen lassen möchten oder einen robusten Kopierschutz
+              benötigen, schreiben Sie mir kurz ein paar Eckdaten zu Ihrem Projekt.
+            </p>
+          </div>
+
+          <div
+            class="p-5 rounded border border-app-border bg-app-bg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span class="text-[11px] font-mono text-app-dim block">DIREKTE E-MAIL</span>
+              <a href="mailto:gerbod.pentesting@gmail.com"
+                class="text-lg font-mono font-medium text-white hover:underline">
+                gerbod.pentesting@gmail.com
+              </a>
+            </div>
+
+            <div class="flex items-center space-x-2">
+              <button onclick="copyMail()"
+                class="px-3.5 py-2 text-xs font-mono rounded border border-app-border bg-app-card hover:bg-app-cardHover text-app-text transition-colors flex items-center space-x-1.5">
+                <i data-lucide="copy" class="w-3.5 h-3.5 text-app-dim"></i>
+                <span id="footerCopyLabel">Adresse kopieren</span>
+              </button>
+
+              <a href="mailto:gerbod.pentesting@gmail.com?subject=Anfrage%20Software-Schutz%20%2F%20Audit&body=Hallo%20Gero%2C%0A%0Akurze%20Eckdaten%20zu%20unserem%20Projekt%3A%0A-%20Software%20%2F%20Technologie%3A%20%0A-%20Aktueller%20Stand%20(Audit%20geplant%2C%20neues%20Lizenzsystem%2C%20akuter%20Crack)%3A%20%0A-%20Geplanter%20Zeitrahmen%3A%20%0A%0AGr%C3%BC%C3%9Fe%2C%0A"
+                class="px-4 py-2 text-xs font-mono rounded bg-white text-neutral-900 font-medium hover:bg-neutral-200 transition-colors">
+                E-Mail verfassen &rarr;
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-app-border py-8 bg-app-bg text-xs font-mono text-app-dim">
+    <div class="max-w-4xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <span>Gero Alexander Bodemann // Software Security & Reverse Engineering</span>
+      </div>
+      <div>
+        <a href="mailto:gerbod.pentesting@gmail.com"
+          class="hover:text-app-text transition-colors">gerbod.pentesting@gmail.com</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    function copyMail() {
+      const email = 'gerbod.pentesting@gmail.com';
+
+      const el = document.createElement('textarea');
+      el.value = email;
+      el.setAttribute('readonly', '');
+      el.style.position = 'absolute';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      el.select();
+
+      try {
+        document.execCommand('copy');
+        triggerToast();
+      } catch (err) {
+        console.error('Kopieren fehlgeschlagen', err);
+      }
+
+      document.body.removeChild(el);
+    }
+
+    function triggerToast() {
+      const toast = document.getElementById('toast');
+      const heroCopyLabel = document.getElementById('heroCopyLabel');
+      const footerCopyLabel = document.getElementById('footerCopyLabel');
+
+      if (heroCopyLabel) {
+        heroCopyLabel.innerText = 'Kopiert!';
+        setTimeout(() => {
+          heroCopyLabel.innerText = 'Adresse kopieren (gerbod.pentesting@gmail.com)';
+        }, 2000);
+      }
+
+      if (footerCopyLabel) {
+        footerCopyLabel.innerText = 'Kopiert!';
+        setTimeout(() => {
+          footerCopyLabel.innerText = 'Adresse kopieren';
+        }, 2000);
+      }
+
+      toast.classList.remove('translate-y-16', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-16', 'opacity-0');
+      }, 2400);
+    }
+  </script>
+</body>
+
+</html>
